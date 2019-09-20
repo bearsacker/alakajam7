@@ -1,0 +1,159 @@
+global const float PI = 3.141592653589793
+global const float ERROR_ESTIMATION = 1.2E-7
+
+function Maths:abs(n) {
+	if n < 0 {
+		n *= -1
+	}
+	
+	return n
+}
+
+function Maths:min(a, b) {
+	if a <= b {
+		return a
+	}
+	
+	return b
+}
+
+function Maths:max(a, b) {
+	if a >= b {
+		return a
+	}
+	
+	return b
+}
+
+function Maths:floor(n) {
+	int result = n
+
+	if n < 0 {
+		result--
+	}
+	
+	return result
+}
+
+function Maths:ceiling(n) {
+	return Maths:floor(n) + 1
+}
+
+function Maths:clamp(value, min, max) {
+	return Maths:max(min, Maths:min(max, value))
+}
+
+function Maths:fact(n) {
+	if n == 0 {
+		return 1
+	} else {
+		return n * Maths:fact(n - 1)
+	}
+}
+
+function Maths:pow(base, exponent) {
+	if exponent > 1 {
+		return base * Maths:pow(base, exponent - 1)
+	} else {
+		return base
+	}
+}
+
+function Maths:sqrt(n) {
+	if n == 0 {
+		return 0
+	} else {
+		float M = 1
+		float XN = n
+
+		while XN >= 2 {
+			XN *= 0.25
+			M *= 2
+		}
+
+		while XN < 0.5 {
+			XN *= 4
+			M *= 0.5
+		}
+     
+		float A = XN
+		float B = 1 - XN
+
+		do {
+			A *= 1 + 0.5 * B
+			B *= (B + 3) * 0.25 * B
+		} while B >= ERROR_ESTIMATION
+
+		return A * M
+	}
+}
+
+function Maths:toDegrees(angle) {
+	return angle * 180 / PI
+}
+
+function Maths:toRadians(angle) {
+	return angle * PI / 180
+}
+
+function Maths:cos(angle) {
+	float s = 1
+	float mem = 0
+	float i = 2
+	int k = 1
+	float f = 1
+
+	while true {
+    	f *= (i - 1) * i
+    	s += Maths:pow(-1, k) * Maths:pow(angle, i) / f
+    	
+    	if mem == s {
+    		break
+    	}
+    
+    	mem = s
+    	i += 2
+    	k++
+	}
+
+	return s
+}
+
+function Maths:sin(angle) {
+	return Maths:cos(PI / -2 + angle)
+}
+
+function Maths:tan(angle) {
+	return Maths:sin(angle) / Maths:cos(angle)
+}
+
+function Maths:acos(angle) {
+	if Maths:abs(angle) == 1 {
+		return (1 - angle) * PI / 2
+	} else {
+		return Maths:atan((0 - angle) / Maths:sqrt(1 - angle * angle)) + 2 * Maths:atan(1)
+	}
+}
+
+function Maths:asin(angle) {
+	if Maths:abs(angle) == 1 {
+		return PI / 2
+	} else {
+		return Maths:atan(angle / Maths:sqrt(1 - angle * angle))
+	}
+}
+
+function Maths:atan(angle) {
+	float A = 1 / Maths:sqrt(angle * angle + 1)
+	float B = 1
+
+	int n = 0
+	while n < 10 {
+		A = (A + B) / 2
+		B = Maths:sqrt(A * B)
+		
+		n++
+	}
+
+	return angle / (Maths:sqrt(angle * angle + 1) * A)
+}

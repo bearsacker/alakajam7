@@ -1,0 +1,48 @@
+type Address [ip, port]
+
+function UDP:newAddress(ip, port) {
+	Address address = null
+	address.ip = ip
+	address.port = port
+
+	return address
+}
+
+function UDP:init() {
+	net_udp init null null null
+}
+
+function UDP:init(port, timeout) {
+	net_udp init port timeout null
+}
+
+function UDP:send(address, message) {
+	if address.type == "Address" {
+		net_udp send address.ip address.port message
+	}
+}
+
+function UDP:receive() {
+	Address address = null
+	string data = ""
+	net_udp receive address.ip address.port data
+	
+	if data == "" {
+		return null
+	}
+	
+	return data
+}
+
+function UDP:receive(@address) {
+	if address.type == "Address" {
+		string data = ""
+		net_udp receive address.ip address.port data
+		
+		if data == "" {
+			return null
+		}
+		
+		return data
+	}
+}

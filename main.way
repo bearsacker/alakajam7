@@ -1,0 +1,50 @@
+include graphics
+include array
+
+global const int ZOOM = 2
+
+Graphics:setWindowSize(ZOOM * 256, ZOOM * 192, false)
+Graphics:setWindowTitle("Alakajam 7")
+Graphics:openWindow()
+
+Sprite lightHouse = Graphics:loadSprite("lighthouse.png")
+Sprite cliff = Graphics:loadSprite("cliff.png")
+Sprite rock1 = Graphics:loadSprite("rock1.png")
+Sprite rock2 = Graphics:loadSprite("rock2.png")
+Sprite rock3 = Graphics:loadSprite("rock3.png")
+Sprite sea = Graphics:loadSprite("sea.png", 0, 0, 16, 16)
+Sprite sky = Graphics:loadSprite("sky.png")
+
+array rocks = Array:new(16, 12)
+rocks[0][3] = rock1
+rocks[3][4] = rock2
+rocks[10][4] = rock1
+rocks[13][6] = rock2
+rocks[14][5] = rock3
+
+int i = 0
+while i < 16 {
+    int j = 0
+
+    while j < 8 {
+        Graphics:drawSprite(sea, ZOOM * i * 16, ZOOM * (j + 4) * 16, 0, ZOOM)
+
+        if rocks[i][j] != null {
+            Graphics:drawSprite(rocks[i][j], ZOOM * i * 16, ZOOM * (j + 4) * 16, 0, ZOOM)
+        }
+
+        j++
+    }
+
+    i++
+}
+
+Graphics:drawSprite(sky, 0, 0, 0, ZOOM)
+Graphics:drawSprite(cliff, ZOOM * (128 - 24), ZOOM * (192 - 32), 0, ZOOM)
+Graphics:drawSprite(lightHouse, ZOOM * (128 - 16), ZOOM * (192 - 66), 0, ZOOM)
+
+Graphics:flush()
+
+while true {
+    
+}

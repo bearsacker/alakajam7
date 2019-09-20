@@ -1,0 +1,104 @@
+function Array:new(x) {
+	if x <= 0 {
+		return null
+	}
+
+	array d = x
+	return d
+}
+
+function Array:new(x, y) {
+	if (x <= 0) || (y <= 0) {
+		return null
+	}
+
+	array d1 = x
+	array d2 = y
+	
+	int i = 0
+	while i < x {
+		d1[i] = d2
+		i++
+	}
+
+	return d1
+}
+
+function Array:new(x, y, z) {
+	if (x <= 0) || (y <= 0) || (z <= 0) {
+		return null
+	}
+
+	array d1 = x
+	array d2 = y
+	array d3 = z
+	
+	int i = 0
+	while i < x {
+		d1[i] = d2
+		
+		int j = 0
+		while j < y {
+			d1[i][j] = d3
+			j++
+		}
+		
+		i++
+	}
+
+	return d1
+}
+
+function Array:empty(array) {
+	int i = 0
+	while i < array.length {
+		if array[i] != null {
+			return false
+		}
+		i++
+	}
+
+	return true
+}
+
+function Array:size(array) {
+	return array.length
+}
+
+function Array:fill(@array, value) {
+	int i = 0
+	while i < array.length {
+		array[i] = value
+		i++
+	}
+}
+
+function Array:clear(@array) {
+	int i = 0
+	while i < array.length {
+		array[i] = null
+		i++
+	}
+}
+
+function Array:resize(@source, size) {
+	array newArray = size
+
+	int i = 0
+	while i < source.length {
+		if i >= size {
+			break
+		}
+		
+		newArray[i] = source[i]
+		i++
+	}
+	
+	source = newArray
+}
+
+function Array:swap(@first, @second) {
+	array temp = first
+	first = second
+	second = temp
+}

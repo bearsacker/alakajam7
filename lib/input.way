@@ -1,0 +1,159 @@
+global const int KEY_BACKSPACE = 8
+global const int KEY_TAB = 9
+global const int KEY_ENTER = 13
+global const int KEY_SHIFT = 16
+global const int KEY_CTRL = 17
+global const int KEY_ALT = 18
+global const int KEY_PAUSE = 19
+global const int KEY_CAPS_LOCK = 20
+global const int KEY_ESCAPE = 27
+global const int KEY_SPACE = 32
+global const int KEY_PAGE_UP = 33
+global const int KEY_PAGE_DOWN = 34
+global const int KEY_END = 35
+global const int KEY_HOME = 36
+global const int KEY_LEFT = 37
+global const int KEY_UP = 38
+global const int KEY_RIGHT = 39
+global const int KEY_DOWN = 40
+global const int KEY_INSERT = 45
+global const int KEY_DELETE = 46
+global const int KEY_0 = 48
+global const int KEY_1 = 49
+global const int KEY_2 = 50
+global const int KEY_3 = 51
+global const int KEY_4 = 52
+global const int KEY_5 = 53
+global const int KEY_6 = 54
+global const int KEY_7 = 55
+global const int KEY_8 = 56
+global const int KEY_9 = 57
+global const int KEY_A = 65
+global const int KEY_B = 66
+global const int KEY_C = 67
+global const int KEY_D = 68
+global const int KEY_E = 69
+global const int KEY_F = 70
+global const int KEY_G = 71
+global const int KEY_H = 72
+global const int KEY_I = 73
+global const int KEY_J = 74
+global const int KEY_K = 75
+global const int KEY_L = 76
+global const int KEY_M = 77
+global const int KEY_N = 78
+global const int KEY_O = 79
+global const int KEY_P = 80
+global const int KEY_Q = 81
+global const int KEY_R = 82
+global const int KEY_S = 83
+global const int KEY_T = 84
+global const int KEY_U = 85
+global const int KEY_V = 86
+global const int KEY_W = 87
+global const int KEY_X = 88
+global const int KEY_Y = 89
+global const int KEY_Z = 90
+global const int KEY_LEFT_WINDOW = 91
+global const int KEY_RIGHT_WINDOW = 92
+global const int KEY_SELECT = 93
+global const int KEY_NUMPAD_0 = 96
+global const int KEY_NUMPAD_1 = 97
+global const int KEY_NUMPAD_2 = 98
+global const int KEY_NUMPAD_3 = 99
+global const int KEY_NUMPAD_4 = 100
+global const int KEY_NUMPAD_5 = 101
+global const int KEY_NUMPAD_6 = 102
+global const int KEY_NUMPAD_7 = 103
+global const int KEY_NUMPAD_8 = 104
+global const int KEY_NUMPAD_9 = 105
+global const int KEY_MULTIPLY = 106
+global const int KEY_ADD = 107
+global const int KEY_SUBTRACT = 109
+global const int KEY_DECIMAL_POINT = 110
+global const int KEY_DIVIDE = 111
+global const int KEY_F1 = 112
+global const int KEY_F2 = 113
+global const int KEY_F3 = 114
+global const int KEY_F4 = 115
+global const int KEY_F5 = 116
+global const int KEY_F6 = 117
+global const int KEY_F7 = 118
+global const int KEY_F8 = 119
+global const int KEY_F9 = 120
+global const int KEY_F10 = 121
+global const int KEY_F11 = 122
+global const int KEY_F12 = 123
+global const int KEY_NUM_LOCK = 144
+global const int KEY_SCROLL_LOCK = 145
+global const int KEY_SEMI_COLON = 186
+global const int KEY_EQUAL = 187
+global const int KEY_COMMA = 188
+global const int KEY_DASH = 189
+global const int KEY_PERIOD = 190
+global const int KEY_FORWARD_SLASH = 191
+global const int KEY_GRAVE_ACCENT = 192
+global const int KEY_OPEN_BRACKET = 219
+global const int KEY_BACK_SLASH = 220
+global const int KEY_CLOSE_BRACKET = 221
+global const int KEY_SINGLE_QUOTE = 222
+
+function Input:flush() {
+	g_input_flush
+}
+
+function Input:isKeyPushed(key) {
+	bool isPushed = false
+	g_input key pushed isPushed key
+
+	return isPushed
+}
+
+function Input:isButtonPushed(button) {
+	bool isPushed = false
+	g_input button pushed isPushed button
+
+	return isPushed
+}
+
+function Input:isKeyPressed(key) {
+	bool isPressed = false
+	g_input key pressed isPressed key
+
+	return isPressed
+}
+
+function Input:isButtonPressed(button) {
+	bool isPressed = false
+	g_input button pressed isPressed button
+
+	return isPressed
+}
+
+function Input:isKeyReleased(key) {
+	bool isReleased = false
+	g_input key released isReleased key
+
+	return isReleased
+}
+
+function Input:isButtonReleased(button) {
+	bool isReleased = false
+	g_input button released isReleased button
+
+	return isReleased
+}
+
+function Input:getMouseX() {
+	int mouseX = -1
+	g_mouse x mouseX
+
+	return mouseX
+}
+
+function Input:getMouseY() {
+	int mouseY = -1
+	g_mouse y mouseY
+
+	return mouseY
+}

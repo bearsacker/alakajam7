@@ -1,0 +1,57 @@
+type Address [ip, port]
+
+function TCP:newAddress(ip, port) {
+	Address address = null
+	address.ip = ip
+	address.port = port
+
+	return address
+}
+
+function TCP:getAddress(id) {
+	Address address = null
+	net_tcp address id address null null
+
+	return address
+}
+
+function TCP:accept() {
+	int id = -1
+	net_tcp accept id null null null
+
+	return id
+}
+
+function TCP:close(id) {
+	net_tcp close id null null null
+}
+
+function TCP:connect(address, timeout) {
+	if address.type == "Address" {
+		int id = -1
+		net_tcp connect address.ip address.port timeout id
+
+		return id
+	}
+
+	return -1
+}
+
+function TCP:listen(port, timeout) {
+	net_tcp listen port timeout null null
+}
+
+function TCP:receive(id) {
+	string data = ""
+	net_tcp receive id data null null
+	
+	if data == "" {
+		return null
+	}
+	
+	return data
+}
+
+function TCP:send(id, message) {
+	net_tcp send id message null null
+}
