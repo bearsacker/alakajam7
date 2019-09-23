@@ -1,0 +1,41 @@
+type Rock [sprite, x, y, frame]
+
+global const int ROCK_WIDTH = 16
+global const int ROCK_HEIGHT = 16
+
+global array ROCK_SPRITE_1 = 4
+ROCK_SPRITE_1[0] = Graphics:loadSprite("sprites/rock1.png", 0, 0, 16, 16)
+ROCK_SPRITE_1[1] = Graphics:loadSprite("sprites/rock1.png", 0, 0, 16, 16)
+ROCK_SPRITE_1[2] = Graphics:loadSprite("sprites/rock1.png", 16, 0, 32, 16)
+ROCK_SPRITE_1[3] = Graphics:loadSprite("sprites/rock1.png", 16, 0, 32, 16)
+
+global array ROCK_SPRITE_2 = 4
+ROCK_SPRITE_2[0] = Graphics:loadSprite("sprites/rock2.png", 0, 0, 16, 16)
+ROCK_SPRITE_2[1] = Graphics:loadSprite("sprites/rock2.png", 0, 0, 16, 16)
+ROCK_SPRITE_2[2] = Graphics:loadSprite("sprites/rock2.png", 16, 0, 32, 16)
+ROCK_SPRITE_2[3] = Graphics:loadSprite("sprites/rock2.png", 16, 0, 32, 16)
+
+global array ROCK_SPRITE_3 = 4
+ROCK_SPRITE_3[0] = Graphics:loadSprite("sprites/rock3.png", 0, 0, 16, 16)
+ROCK_SPRITE_3[1] = Graphics:loadSprite("sprites/rock3.png", 0, 0, 16, 16)
+ROCK_SPRITE_3[2] = Graphics:loadSprite("sprites/rock3.png", 16, 0, 32, 16)
+ROCK_SPRITE_3[3] = Graphics:loadSprite("sprites/rock3.png", 16, 0, 32, 16)
+
+
+function Rock:new(sprite, x, y, frame) {
+    Rock rock = null
+    rock.sprite = sprite
+    rock.x = x
+    rock.y = y + 4
+    rock.frame = frame
+
+    return rock
+}
+
+function Rock:update(@rock) {
+    rock.frame = (rock.frame + 1) % ROCK_SPRITE_1.length
+}
+
+function Rock:draw(rock) {
+    Graphics:drawSprite(rock.sprite[rock.frame], ZOOM * rock.x * 16, ZOOM * rock.y * 16, 0, ZOOM)
+}

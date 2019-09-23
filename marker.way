@@ -1,0 +1,70 @@
+type Marker [message, x, y, frame]
+
+global const int MARKER_TYPE_LOSE = 0
+global const int MARKER_TYPE_GAIN = 1
+global const int MARKER_TYPE_OYE = 2
+global const int MARKER_TYPE_OUCH = 3
+
+global int MARKER_GAIN_SOUND = -1
+snd_load MARKER_GAIN_SOUND "sounds/marker-gain.wav"
+
+global int MARKER_LOSE_SOUND = -1
+snd_load MARKER_LOSE_SOUND "sounds/marker-lose.wav"
+
+global array MARKER_LOSE_SPRITE = 5
+MARKER_LOSE_SPRITE[0] = Graphics:loadSprite("sprites/marker-lose.png", 0, 0, 16, 16)
+MARKER_LOSE_SPRITE[1] = Graphics:loadSprite("sprites/marker-lose.png", 16, 0, 32, 16)
+MARKER_LOSE_SPRITE[2] = Graphics:loadSprite("sprites/marker-lose.png", 32, 0, 48, 16)
+MARKER_LOSE_SPRITE[3] = Graphics:loadSprite("sprites/marker-lose.png", 48, 0, 64, 16)
+MARKER_LOSE_SPRITE[4] = Graphics:loadSprite("sprites/marker-lose.png", 64, 0, 80, 16)
+
+global array MARKER_GAIN_SPRITE = 5
+MARKER_GAIN_SPRITE[0] = Graphics:loadSprite("sprites/marker-gain.png", 0, 0, 16, 16)
+MARKER_GAIN_SPRITE[1] = Graphics:loadSprite("sprites/marker-gain.png", 16, 0, 32, 16)
+MARKER_GAIN_SPRITE[2] = Graphics:loadSprite("sprites/marker-gain.png", 32, 0, 48, 16)
+MARKER_GAIN_SPRITE[3] = Graphics:loadSprite("sprites/marker-gain.png", 48, 0, 64, 16)
+MARKER_GAIN_SPRITE[4] = Graphics:loadSprite("sprites/marker-gain.png", 64, 0, 80, 16)
+
+global array MARKER_OYE_SPRITE = 5
+MARKER_OYE_SPRITE[0] = Graphics:loadSprite("sprites/marker-oye.png", 0, 0, 32, 16)
+MARKER_OYE_SPRITE[1] = Graphics:loadSprite("sprites/marker-oye.png", 32, 0, 64, 16)
+MARKER_OYE_SPRITE[2] = Graphics:loadSprite("sprites/marker-oye.png", 64, 0, 96, 16)
+MARKER_OYE_SPRITE[3] = Graphics:loadSprite("sprites/marker-oye.png", 96, 0, 128, 16)
+MARKER_OYE_SPRITE[4] = Graphics:loadSprite("sprites/marker-oye.png", 128, 0, 160, 16)
+
+global array MARKER_OUCH_SPRITE = 5
+MARKER_OUCH_SPRITE[0] = Graphics:loadSprite("sprites/marker-ouch.png", 0, 0, 32, 16)
+MARKER_OUCH_SPRITE[1] = Graphics:loadSprite("sprites/marker-ouch.png", 32, 0, 64, 16)
+MARKER_OUCH_SPRITE[2] = Graphics:loadSprite("sprites/marker-ouch.png", 64, 0, 96, 16)
+MARKER_OUCH_SPRITE[3] = Graphics:loadSprite("sprites/marker-ouch.png", 96, 0, 128, 16)
+MARKER_OUCH_SPRITE[4] = Graphics:loadSprite("sprites/marker-ouch.png", 128, 0, 160, 16)
+
+function Marker:new(message, x, y) {
+    Marker marker = null
+    marker.message = message
+    marker.x = x
+    marker.y = y
+    marker.frame = MARKER_TYPE_LOSE
+
+    return marker
+}
+
+function Marker:update(@marker) {
+    marker.frame++
+}
+
+function Marker:draw(marker) {
+    if marker.message == MARKER_TYPE_LOSE {
+        Graphics:drawSprite(MARKER_LOSE_SPRITE[marker.frame], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
+    } else if marker.message == MARKER_TYPE_GAIN {
+        Graphics:drawSprite(MARKER_GAIN_SPRITE[marker.frame], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
+    } else if marker.message == MARKER_TYPE_OYE {
+        Graphics:drawSprite(MARKER_OYE_SPRITE[marker.frame], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
+    } else if marker.message == MARKER_TYPE_OUCH {
+        Graphics:drawSprite(MARKER_OUCH_SPRITE[marker.frame], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
+    }
+}
+
+function Marker:isDead(marker) {
+    return marker.frame >= MARKER_LOSE_SPRITE.length
+}

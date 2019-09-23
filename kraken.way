@@ -1,0 +1,90 @@
+type Kraken [x, y, frame, state]
+
+global int KRAKEN_INCOMING_SOUND = -1
+snd_load KRAKEN_INCOMING_SOUND "sounds/kraken-incoming.wav"
+
+global int KRAKEN_DYING_SOUND = -1
+snd_load KRAKEN_DYING_SOUND "sounds/kraken-dying.wav"
+
+global int KRAKEN_LAUGHING_SOUND = -1
+snd_load KRAKEN_LAUGHING_SOUND "sounds/kraken-laughing.wav"
+
+global array KRAKEN_SPRITE = 8
+KRAKEN_SPRITE[0] = Graphics:loadSprite("sprites/kraken.png", 0, 0, 32, 32)
+KRAKEN_SPRITE[1] = Graphics:loadSprite("sprites/kraken.png", 0, 0, 32, 32)
+KRAKEN_SPRITE[2] = Graphics:loadSprite("sprites/kraken.png", 32, 0, 64, 32)
+KRAKEN_SPRITE[3] = Graphics:loadSprite("sprites/kraken.png", 32, 0, 64, 32)
+KRAKEN_SPRITE[4] = Graphics:loadSprite("sprites/kraken.png", 64, 0, 96, 32)
+KRAKEN_SPRITE[5] = Graphics:loadSprite("sprites/kraken.png", 64, 0, 96, 32)
+KRAKEN_SPRITE[6] = Graphics:loadSprite("sprites/kraken.png", 96, 0, 128, 32)
+KRAKEN_SPRITE[7] = Graphics:loadSprite("sprites/kraken.png", 96, 0, 128, 32)
+
+global array KRAKEN_INCOMING_SPRITE = 8
+KRAKEN_INCOMING_SPRITE[0] = Graphics:loadSprite("sprites/kraken-incoming.png", 0, 0, 32, 32)
+KRAKEN_INCOMING_SPRITE[1] = Graphics:loadSprite("sprites/kraken-incoming.png", 0, 0, 32, 32)
+KRAKEN_INCOMING_SPRITE[2] = Graphics:loadSprite("sprites/kraken-incoming.png", 32, 0, 64, 32)
+KRAKEN_INCOMING_SPRITE[3] = Graphics:loadSprite("sprites/kraken-incoming.png", 32, 0, 64, 32)
+KRAKEN_INCOMING_SPRITE[4] = Graphics:loadSprite("sprites/kraken-incoming.png", 64, 0, 96, 32)
+KRAKEN_INCOMING_SPRITE[5] = Graphics:loadSprite("sprites/kraken-incoming.png", 64, 0, 96, 32)
+KRAKEN_INCOMING_SPRITE[6] = Graphics:loadSprite("sprites/kraken-incoming.png", 96, 0, 128, 32)
+KRAKEN_INCOMING_SPRITE[7] = Graphics:loadSprite("sprites/kraken-incoming.png", 96, 0, 128, 32)
+
+global const int KRAKEN_STATE_IMMERSED = 0
+global const int KRAKEN_STATE_INCOMING = 1
+global const int KRAKEN_STATE_NORMAL = 2
+global const int KRAKEN_STATE_DYING = 3
+
+
+function Kraken:new() {
+    Kraken kraken = null
+    kraken.x = Random:rand(8, 248)
+    kraken.y = Random:rand(64, 160)
+    kraken.frame = 0
+    kraken.state = KRAKEN_STATE_IMMERSED
+
+    return kraken
+}
+
+function Kraken:incoming(@kraken) {
+    kraken.x = Random:rand(8, 216)
+    kraken.y = Random:rand(64, 160)
+    kraken.state = KRAKEN_STATE_INCOMING
+
+    snd_action play KRAKEN_INCOMING_SOUND null
+
+    List:add(markers, Marker:new(MARKER_TYPE_OYE, kraken.x, kraken.y - 8))
+}
+
+function Kraken:dying(@kraken) {
+    kraken.state = KRAKEN_STATE_DYING
+    kraken.frame = 0
+
+    snd_action play KRAKEN_DYING_SOUND null
+
+    List:add(markers, Marker:new(MARKER_TYPE_OUCH, kraken.x, kraken.y - 8))
+}
+
+function Kraken:update(@kraken, mouseX, mouseY, direction) {
+    kraken.frame = (kraken.frame + 1) % KRAKEN_SPRITE.length
+
+    if (kraken.state == KRAKEN_STATE_INCOMING) && (kraken.frame == 0) {
+        kraken.state = KRAKEN_STATE_NORMAL
+    } else if (kraken.state == KRAKEN_STATE_DYING) && (kraken.frame == 0) {
+        kraken.state = KRAKEN_STATE_IMMERSED
+    }
+
+    if (kraken.state == KRAKEN_STATE_NORMAL) && (direction != DIRECTION_NONE) && (mouseX >= ZOOM * (kraken.x + 8)) && (mouseX <= ZOOM * (kraken.x + 24)) && (mouseY >= ZOOM * (kraken.y + 8)) && (mouseY <= ZOOM * (kraken.y + 24)) {
+        Kraken:dying(kraken)
+        score++
+    }
+}
+
+function Kraken:draw(kraken) {
+    if kraken.state == KRAKEN_STATE_NORMAL {
+        Graphics:drawSprite(KRAKEN_SPRITE[kraken.frame], ZOOM * kraken.x, ZOOM * kraken.y, 0, ZOOM)
+    } else if kraken.state == KRAKEN_STATE_INCOMING {
+        Graphics:drawSprite(KRAKEN_INCOMING_SPRITE[kraken.frame], ZOOM * kraken.x, ZOOM * kraken.y, 0, ZOOM)
+    } else if kraken.state == KRAKEN_STATE_DYING {
+        Graphics:drawSprite(KRAKEN_INCOMING_SPRITE[KRAKEN_INCOMING_SPRITE.length - 1 - kraken.frame], ZOOM * kraken.x, ZOOM * kraken.y, 0, ZOOM)
+    }
+}

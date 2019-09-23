@@ -1,0 +1,21 @@
+include graphics
+include array
+include list
+include input
+include random
+
+Random:randSeed(time)
+
+include boat
+include rock
+include kraken
+include marker
+
+global const int WIDTH = 256
+global const int HEIGHT = 192
+global const int ZOOM = 3
+
+Graphics:setWindowSize(ZOOM * WIDTH, ZOOM * HEIGHT, false)
+Graphics:setWindowTitle("Kraken Bay")
+Graphics:setWindowIcon("sprites/icon.png")
+Graphics:openWindow()

@@ -1,0 +1,1 @@
+java -jar way.jar run KrakenBay

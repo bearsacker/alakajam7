@@ -1,0 +1,12 @@
+string gameover = "GAME OVER"
+string retry = "PRESS SPACE TO RETRY"
+
+Graphics:drawText(gameover, ZOOM * (128 - gameover.length * 4), ZOOM * 84, ATASCII, ZOOM / 2)
+Graphics:drawText(retry, ZOOM * (128 - retry.length * 4), ZOOM * 96, ATASCII, ZOOM / 2)
+Graphics:flush()
+
+while !Input:isKeyPressed(KEY_SPACE) {
+    Input:flush()
+}
+
+snd_action play KRAKEN_LAUGHING_SOUND null
