@@ -1,0 +1,25 @@
+type Sea [frame]
+
+global int MUSIC = -1
+snd_load MUSIC "sounds/music.wav"
+snd_action loop MUSIC -1
+
+global const Sprite SKY_SPRITE = Graphics:loadSprite("sprites/sky.png")
+
+global array SEA_SPRITE = 4
+SEA_SPRITE[0] = Graphics:loadSprite("sprites/sea.png", 0, 0, 256, 192)
+SEA_SPRITE[1] = Graphics:loadSprite("sprites/sea.png", 256, 0, 512, 192)
+SEA_SPRITE[2] = Graphics:loadSprite("sprites/sea.png", 512, 0, 768, 192)
+SEA_SPRITE[3] = Graphics:loadSprite("sprites/sea.png", 768, 0, 1024, 192)
+
+global Sea SEA = null
+SEA.frame = 0
+
+function Sea:draw() {
+    Graphics:drawSprite(SEA_SPRITE[SEA.frame], 0, 0, 0, ZOOM)
+    Graphics:drawSprite(SKY_SPRITE, 0, 0, 0, ZOOM)
+}
+
+function Sea:update() {
+    SEA.frame = (SEA.frame + 1) % SEA_SPRITE.length
+}

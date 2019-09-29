@@ -1,22 +1,18 @@
 global const Font ATASCII = Graphics:loadFont("atascii.png", 16)
 
-global const Color LIGHT_OFF = Graphics:newColor(250, 200, 50, 24)
-global const Color LIGHT_ON = Graphics:newColor(250, 200, 50, 128)
-
-global int MUSIC = -1
-snd_load MUSIC "sounds/music.wav"
-snd_action loop MUSIC -1
-
-global const Sprite SKY_SPRITE = Graphics:loadSprite("sprites/sky.png")
 global const Sprite LIGHTHOUSE_SPRITE = Graphics:loadSprite("sprites/lighthouse.png")
 global const Sprite CLIFF_SPRITE = Graphics:loadSprite("sprites/cliff.png")
 
-global array SEA_SPRITE = 4
-SEA_SPRITE[0] = Graphics:loadSprite("sprites/sea.png", 0, 0, 256, 192)
-SEA_SPRITE[1] = Graphics:loadSprite("sprites/sea.png", 256, 0, 512, 192)
-SEA_SPRITE[2] = Graphics:loadSprite("sprites/sea.png", 512, 0, 768, 192)
-SEA_SPRITE[3] = Graphics:loadSprite("sprites/sea.png", 768, 0, 1024, 192)
-global int seaCurrentFrame = 0
+global const Color LIGHT_OFF = Graphics:newColor(250, 200, 50, 24)
+global const Color LIGHT_ON = Graphics:newColor(250, 200, 50, 128)
+
+global List clouds = List:new()
+
+int i = 0
+while i < MAX_CLOUDS {
+    List:add(clouds, Cloud:new())
+    i++
+}
 
 {
     array TITLE_SPRITE = 8
@@ -33,24 +29,31 @@ global int seaCurrentFrame = 0
         Input:flush()
         Graphics:clear()
 
-        Graphics:drawSprite(SEA_SPRITE[seaCurrentFrame], 0, 0, 0, ZOOM)
-        Graphics:drawSprite(SKY_SPRITE, 0, 0, 0, ZOOM)
-        Graphics:drawSprite(TITLE_SPRITE[titleCurrentFrame], 0, ZOOM * 42, 0, 2 * ZOOM)
+        Sea:draw()
+        Sea:update()
 
-        if seaCurrentFrame < 2 {
-            Graphics:drawText(text, ZOOM * (128 - text.length * 4), ZOOM * 128, ATASCII, ZOOM / 2)
-        }
-
-        Graphics:drawText(author, ZOOM * (252 - author.length * 4), ZOOM * 186, ATASCII, ZOOM / 4)
-
-        Graphics:flush()
-
-        seaCurrentFrame = (seaCurrentFrame + 1) % 4
-        if seaCurrentFrame == 0 {
+        if SEA.frame == 0 {
             titleCurrentFrame = (titleCurrentFrame + 1) % 4
         }
 
-        sleep 300
+        if SEA.frame < 2 {
+            Graphics:drawText(text, ZOOM * (128 - text.length * 4), ZOOM * 128, ATASCII, ZOOM / 2)
+        }
+        Graphics:drawText(author, ZOOM * (252 - author.length * 4), ZOOM * 186, ATASCII, ZOOM / 4)
+
+        int i = 0
+        while i < clouds.size {
+            Cloud:draw(clouds.elements[i])
+            Cloud:update(clouds.elements[i])
+
+            i++
+        }
+
+        Graphics:drawSprite(TITLE_SPRITE[titleCurrentFrame], 0, ZOOM * 42, 0, 2 * ZOOM)
+
+        Graphics:flush()
+
+        sleep 100
     }
 
     Sprite rock1 = Graphics:loadSprite("sprites/rock1.png", 0, 0, 16, 16)
@@ -63,9 +66,17 @@ global int seaCurrentFrame = 0
     while step > 0 {
         Graphics:clear()
 
-        Graphics:drawSprite(SEA_SPRITE[seaCurrentFrame], 0, 0, 0, ZOOM)
-        seaCurrentFrame = (seaCurrentFrame + 1) % 4
-        Graphics:drawSprite(SKY_SPRITE, 0, 0, 0, ZOOM)
+        Sea:draw()
+        Sea:update()
+
+        int i = 0
+        while i < clouds.size {
+            Cloud:draw(clouds.elements[i])
+            Cloud:update(clouds.elements[i])
+
+            i++
+        }
+
         Graphics:drawSprite(TITLE_SPRITE[titleCurrentFrame], 0, ZOOM * (-42 + step) * 2, 0, 2 * ZOOM)
 
         Graphics:drawSprite(rock1, 0, ZOOM * (112 + step), 0, ZOOM)

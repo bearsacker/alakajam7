@@ -6,10 +6,12 @@ include random
 
 Random:randSeed(time)
 
+include sea
 include boat
 include rock
 include kraken
 include marker
+include cloud
 
 global const int WIDTH = 256
 global const int HEIGHT = 192
