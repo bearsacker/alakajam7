@@ -55,16 +55,16 @@ function Marker:update(@marker) {
 
 function Marker:draw(marker) {
     if marker.message == MARKER_TYPE_LOSE {
-        Graphics:drawSprite(MARKER_LOSE_SPRITE[marker.frame], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
+        Graphics:drawSprite(MARKER_LOSE_SPRITE[marker.frame / 2], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
     } else if marker.message == MARKER_TYPE_GAIN {
-        Graphics:drawSprite(MARKER_GAIN_SPRITE[marker.frame], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
+        Graphics:drawSprite(MARKER_GAIN_SPRITE[marker.frame / 2], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
     } else if marker.message == MARKER_TYPE_OYE {
-        Graphics:drawSprite(MARKER_OYE_SPRITE[marker.frame], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
+        Graphics:drawSprite(MARKER_OYE_SPRITE[marker.frame / 2], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
     } else if marker.message == MARKER_TYPE_OUCH {
-        Graphics:drawSprite(MARKER_OUCH_SPRITE[marker.frame], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
+        Graphics:drawSprite(MARKER_OUCH_SPRITE[marker.frame / 2], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
     }
 }
 
 function Marker:isDead(marker) {
-    return marker.frame >= MARKER_LOSE_SPRITE.length
+    return marker.frame >= MARKER_LOSE_SPRITE.length * 2
 }

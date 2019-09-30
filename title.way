@@ -1,5 +1,9 @@
 global const Font ATASCII = Graphics:loadFont("atascii.png", 16)
 
+global int MUSIC = -1
+snd_load MUSIC "sounds/music.wav"
+snd_action loop MUSIC -1
+
 global const Sprite LIGHTHOUSE_SPRITE = Graphics:loadSprite("sprites/lighthouse.png")
 global const Sprite CLIFF_SPRITE = Graphics:loadSprite("sprites/cliff.png")
 
@@ -36,7 +40,7 @@ while i < MAX_CLOUDS {
             titleCurrentFrame = (titleCurrentFrame + 1) % 4
         }
 
-        if SEA.frame < 2 {
+        if titleCurrentFrame < 2 {
             Graphics:drawText(text, ZOOM * (128 - text.length * 4), ZOOM * 128, ATASCII, ZOOM / 2)
         }
         Graphics:drawText(author, ZOOM * (252 - author.length * 4), ZOOM * 186, ATASCII, ZOOM / 4)

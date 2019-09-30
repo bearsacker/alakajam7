@@ -1,4 +1,4 @@
-type Kraken [x, y, frame, state]
+type Kraken [x, y, frame, state, destx, desty, angle]
 
 global int KRAKEN_INCOMING_SOUND = -1
 snd_load KRAKEN_INCOMING_SOUND "sounds/kraken-incoming.wav"
@@ -32,22 +32,38 @@ KRAKEN_INCOMING_SPRITE[7] = Graphics:loadSprite("sprites/kraken-incoming.png", 9
 global const int KRAKEN_STATE_IMMERSED = 0
 global const int KRAKEN_STATE_INCOMING = 1
 global const int KRAKEN_STATE_NORMAL = 2
-global const int KRAKEN_STATE_DYING = 3
+global const int KRAKEN_STATE_IMMERSING = 3
 
 
 function Kraken:new() {
     Kraken kraken = null
-    kraken.x = Random:rand(8, 248)
-    kraken.y = Random:rand(64, 160)
+    kraken.x = 0
+    kraken.y = 0
+    kraken.destx = 0
+    kraken.desty = 0
+    kraken.angle = 0
     kraken.frame = 0
     kraken.state = KRAKEN_STATE_IMMERSED
 
     return kraken
 }
 
+function atan2(ax, ay, bx, by) {
+    float angle = Maths:atan((by - ay) / (bx - ax))
+    
+    if bx - ax < 0 {
+        angle += PI
+    }
+
+    return angle
+}
+
 function Kraken:incoming(@kraken) {
     kraken.x = Random:rand(8, 216)
     kraken.y = Random:rand(64, 160)
+    kraken.destx = Random:rand(8, 216)
+    kraken.desty = Random:rand(64, 160)
+    kraken.angle = atan2(kraken.x, kraken.y, kraken.destx, kraken.desty)
     kraken.state = KRAKEN_STATE_INCOMING
 
     snd_action play KRAKEN_INCOMING_SOUND null
@@ -55,27 +71,37 @@ function Kraken:incoming(@kraken) {
     List:add(markers, Marker:new(MARKER_TYPE_OYE, kraken.x, kraken.y - 8))
 }
 
+function Kraken:immersing(@kraken) {
+    kraken.state = KRAKEN_STATE_IMMERSING
+    kraken.frame = 0
+}
+
 function Kraken:dying(@kraken) {
-    kraken.state = KRAKEN_STATE_DYING
+    kraken.state = KRAKEN_STATE_IMMERSING
     kraken.frame = 0
 
     snd_action play KRAKEN_DYING_SOUND null
 
-    List:add(markers, Marker:new(MARKER_TYPE_OUCH, kraken.x, kraken.y - 8))
+    List:add(markers, Marker:new(MARKER_TYPE_OUCH, kraken.x, kraken.y - 12))
+    List:add(markers, Marker:new(MARKER_TYPE_GAIN, kraken.x + 8, kraken.y - 4))
 }
 
 function Kraken:update(@kraken, mouseX, mouseY, direction) {
-    kraken.frame = (kraken.frame + 1) % KRAKEN_SPRITE.length
+    if kraken.state == KRAKEN_STATE_NORMAL {
+        kraken.x += Maths:cos(kraken.angle)
+        kraken.y += Maths:sin(kraken.angle)
+        kraken.frame = (kraken.frame + 1) % KRAKEN_SPRITE.length
 
-    if (kraken.state == KRAKEN_STATE_INCOMING) && (kraken.frame == 0) {
+        if kraken.x <= kraken.destx + 1 && kraken.x >= kraken.destx - 1 && kraken.y <= kraken.desty + 1 && kraken.y >= kraken.desty - 1 {
+            Kraken:immersing(kraken)
+        } else if (direction != DIRECTION_NONE) && (mouseX >= ZOOM * (kraken.x + 8)) && (mouseX <= ZOOM * (kraken.x + 24)) && (mouseY >= ZOOM * (kraken.y + 8)) && (mouseY <= ZOOM * (kraken.y + 24)) {
+            Kraken:dying(kraken)
+            score++
+        }
+    } else if kraken.state == KRAKEN_STATE_INCOMING && kraken.frame == 0 {
         kraken.state = KRAKEN_STATE_NORMAL
-    } else if (kraken.state == KRAKEN_STATE_DYING) && (kraken.frame == 0) {
+    } else if kraken.state == KRAKEN_STATE_IMMERSING && kraken.frame == 0 {
         kraken.state = KRAKEN_STATE_IMMERSED
-    }
-
-    if (kraken.state == KRAKEN_STATE_NORMAL) && (direction != DIRECTION_NONE) && (mouseX >= ZOOM * (kraken.x + 8)) && (mouseX <= ZOOM * (kraken.x + 24)) && (mouseY >= ZOOM * (kraken.y + 8)) && (mouseY <= ZOOM * (kraken.y + 24)) {
-        Kraken:dying(kraken)
-        score++
     }
 }
 
@@ -84,7 +110,7 @@ function Kraken:draw(kraken) {
         Graphics:drawSprite(KRAKEN_SPRITE[kraken.frame], ZOOM * kraken.x, ZOOM * kraken.y, 0, ZOOM)
     } else if kraken.state == KRAKEN_STATE_INCOMING {
         Graphics:drawSprite(KRAKEN_INCOMING_SPRITE[kraken.frame], ZOOM * kraken.x, ZOOM * kraken.y, 0, ZOOM)
-    } else if kraken.state == KRAKEN_STATE_DYING {
+    } else if kraken.state == KRAKEN_STATE_IMMERSING {
         Graphics:drawSprite(KRAKEN_INCOMING_SPRITE[KRAKEN_INCOMING_SPRITE.length - 1 - kraken.frame], ZOOM * kraken.x, ZOOM * kraken.y, 0, ZOOM)
     }
 }

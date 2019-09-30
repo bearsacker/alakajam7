@@ -1,9 +1,5 @@
 type Sea [frame]
 
-global int MUSIC = -1
-snd_load MUSIC "sounds/music.wav"
-snd_action loop MUSIC -1
-
 global const Sprite SKY_SPRITE = Graphics:loadSprite("sprites/sky.png")
 
 global array SEA_SPRITE = 4

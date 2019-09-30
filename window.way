@@ -3,6 +3,7 @@ include array
 include list
 include input
 include random
+include maths
 
 Random:randSeed(time)
 
