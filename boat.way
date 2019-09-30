@@ -1,4 +1,4 @@
-type Boat [x, y, frame]
+type Boat [position, frame]
 
 global const int MAX_BOATS = 8
 
@@ -23,8 +23,7 @@ boatSprite[5] = Graphics:loadSprite("sprites/boat.png", BOAT_WIDTH * 5, 0, BOAT_
 
 function Boat:new() {
     Boat boat = null
-    boat.x = Random:rand(BOAT_WIDTH / 2, WIDTH - BOAT_WIDTH - BOAT_WIDTH / 2)
-    boat.y = 62
+    boat.position = Vector:new(Random:rand(BOAT_WIDTH / 2, WIDTH - BOAT_WIDTH - BOAT_WIDTH / 2), 62)
     boat.frame = 0
 
     snd_action play BOAT_SOUND null
@@ -32,36 +31,32 @@ function Boat:new() {
     return boat
 }
 
-function Boat:update(@boat, mouseX, mouseY, direction) {
-    if (ZOOM * boat.x <= mouseX) && (ZOOM * (boat.x + 16) >= mouseX) && (ZOOM * boat.y <= mouseY) && (ZOOM * (boat.y + 16) >= mouseY) {
-
-        if direction > DIRECTION_NONE {
-            int speed = BOAT_SPEED
-
-            if mouseX > ZOOM * 128 {
-                speed *= -1
-            }
-
-            if direction == DIRECTION_FORWARD {
-                boat.x += speed
-            } else {
-                boat.x -= speed
+function Boat:update(@boat, mouse) {
+    if direction {
+        Vector center = Vector:new(ZOOM * (boat.position.x + BOAT_WIDTH / 2), ZOOM * (boat.position.y + BOAT_HEIGHT / 2))
+        int distance = Vector:distance(center, mouse)
+        if distance < ZOOM * BOAT_WIDTH * 1.5 {
+            if mouse.x < center.x {
+                boat.position.x--
+            } else if mouse.x > center.x {
+                boat.position.x++
             }
         }
     }
 
-    boat.y++
+    boat.position.y++
+
     if boat.frame < boatSprite.length - 1 {
-        boat.frame = (boat.y - 64) / 14
+        boat.frame = (boat.position.y - 64) / 14
     }
 
-    if boat.y > HEIGHT {
+    if boat.position.y > HEIGHT {
         return BOAT_STATE_SAFE
     }
 
     int i = 0
     while i < rocks.size {
-        if boat.x + BOAT_WIDTH < 0 || boat.x > WIDTH || Boat:collideWithRock(boat, rocks.elements[i]) || Boat:collideWithKraken(boat, kraken) {
+        if boat.position.x + BOAT_WIDTH < 0 || boat.position.x > WIDTH || Boat:collideWithRock(boat, rocks.elements[i]) || Boat:collideWithKraken(boat, kraken) {
             return BOAT_STATE_DESTROY
         }
 
@@ -75,9 +70,9 @@ function Boat:collideWithRock(boat, rock) {
     int rockX = rock.x * ROCK_WIDTH
     int rockY = rock.y * ROCK_HEIGHT
 
-    return (boat.x + 12 >= rockX) && (boat.x <= rockX + 12) && (boat.y + 8 >= rockY) && (boat.y <= rockY + 12)
+    return (boat.position.x + 12 >= rockX) && (boat.position.x <= rockX + 12) && (boat.position.y + 8 >= rockY) && (boat.position.y <= rockY + 12)
 }
 
 function Boat:collideWithKraken(boat, kraken) {
-    return (kraken.state == KRAKEN_STATE_NORMAL) && (boat.x + 4 >= kraken.x) && (boat.x <= kraken.x + 24) && (boat.y + 4 >= kraken.y) && (boat.y <= kraken.y + 24)
+    return (kraken.state == KRAKEN_STATE_NORMAL) && (boat.position.x + 4 >= kraken.position.x) && (boat.position.x <= kraken.position.x + 24) && (boat.position.y + 4 >= kraken.position.y) && (boat.position.y <= kraken.position.y + 24)
 }

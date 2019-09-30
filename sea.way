@@ -14,8 +14,5 @@ SEA.frame = 0
 function Sea:draw() {
     Graphics:drawSprite(SEA_SPRITE[SEA.frame], 0, 0, 0, ZOOM)
     Graphics:drawSprite(SKY_SPRITE, 0, 0, 0, ZOOM)
-}
-
-function Sea:update() {
     SEA.frame = (SEA.frame + 1) % SEA_SPRITE.length
 }

@@ -21,11 +21,7 @@ List:add(rocks, Rock:new(ROCK_SPRITE_3, 6, 7, 1))
 List:add(rocks, Rock:new(ROCK_SPRITE_3, 9, 7, 2))
 
 global int lastDisplay = time
-
-global const int DIRECTION_NONE = 0
-global const int DIRECTION_FORWARD = 1
-global const int DIRECTION_BACKWARD = 2
-global int direction = DIRECTION_NONE
+global bool direction = false
 
 function resetGame() {
     List:clear(markers)
@@ -38,33 +34,31 @@ function resetGame() {
 function drawScene() {
     lastDisplay = time
 
-    int mouseX = Input:getMouseX()
-    int mouseY = Input:getMouseY()
-    if mouseY > 0 && mouseY < (ZOOM * 64) {
-        mouseY = (ZOOM * 64)
+    Vector mouse = Vector:new(Input:getMouseX(), Input:getMouseY())
+    if mouse.y > 0 && mouse.y < (ZOOM * 64) {
+        mouse.y = (ZOOM * 64)
     }
 
     Graphics:clear()
 
     Sea:draw()
-    Sea:update()
 
     int i = 0
     while i < boats.size {
         Boat boat = List:get(boats, i)
-        Graphics:drawSprite(boatSprite[boat.frame], ZOOM * boat.x, ZOOM * boat.y, 0, ZOOM)
+        Graphics:drawSprite(boatSprite[boat.frame], ZOOM * boat.position.x, ZOOM * boat.position.y, 0, ZOOM)
         
-        int boatState = Boat:update(boats.elements[i], mouseX, mouseY, direction)
+        int boatState = Boat:update(boats.elements[i], mouse)
 
         if boatState == BOAT_STATE_SAFE {
             List:remove(boats, i)
-            List:add(markers, Marker:new(MARKER_TYPE_GAIN, boat.x, boat.y - 16))
+            List:add(markers, Marker:new(MARKER_TYPE_GAIN, boat.position.x, boat.position.y - 16))
             snd_action play MARKER_GAIN_SOUND null
 
             score++
         } else if boatState == BOAT_STATE_DESTROY {
             List:remove(boats, i)
-            List:add(markers, Marker:new(MARKER_TYPE_LOSE, boat.x, boat.y - 16))
+            List:add(markers, Marker:new(MARKER_TYPE_LOSE, boat.position.x, boat.position.y - 16))
             snd_action play MARKER_LOSE_SOUND null
 
             lifes--
@@ -79,31 +73,27 @@ function drawScene() {
     int i = 0
     while i < clouds.size {
         Cloud:draw(clouds.elements[i])
-        Cloud:update(clouds.elements[i])
-
         i++
     }
 
     int i = 0
     while i < rocks.size {
         Rock:draw(rocks.elements[i])
-        Rock:update(rocks.elements[i])
-
         i++
     }
 
     Kraken:draw(kraken)
-    Kraken:update(kraken, mouseX, mouseY, direction)
+    Kraken:update(kraken, mouse)
 
-    if mouseX > 0 && mouseY > 0 {
-        if direction == DIRECTION_FORWARD || direction == DIRECTION_BACKWARD {
+    if mouse.x > 0 && mouse.y > 0 {
+        if direction {
             Graphics:setColor(LIGHT_ON)
         } else {
             Graphics:setColor(LIGHT_OFF)
         }
 
-        Graphics:drawLine(ZOOM * 128, ZOOM * 144, mouseX - 4, mouseY, 7)
-        Graphics:drawLine(ZOOM * 128, ZOOM * 144, mouseX + 4, mouseY, 7)
+        Graphics:drawLine(ZOOM * 128, ZOOM * 144, mouse.x - 4, mouse.y, 7)
+        Graphics:drawLine(ZOOM * 128, ZOOM * 144, mouse.x + 4, mouse.y, 7)
     }
 
     Graphics:drawSprite(CLIFF_SPRITE, ZOOM * 104, ZOOM * 160, 0, ZOOM)
@@ -112,7 +102,6 @@ function drawScene() {
     int i = 0
     while i < markers.size {
         Marker:draw(markers.elements[i])
-        Marker:update(markers.elements[i])
 
         if Marker:isDead(markers.elements[i]) {
             List:remove(markers, i)
@@ -135,13 +124,7 @@ while true {
         drawScene()
 
         Input:flush()
-        if Input:isButtonPressed(1) {
-            direction = DIRECTION_FORWARD
-        } else if Input:isButtonPressed(3) {
-            direction = DIRECTION_BACKWARD
-        } else {
-            direction = DIRECTION_NONE
-        }
+        direction = Input:isButtonPressed(1)
 
         if boats.size < MAX_BOATS && Random:rand(20) == 1 && waitBeforeBoat <= 0 {
             List:add(boats, Boat:new())

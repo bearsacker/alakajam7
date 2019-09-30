@@ -7,6 +7,7 @@ include maths
 
 Random:randSeed(time)
 
+include vector
 include sea
 include boat
 include rock

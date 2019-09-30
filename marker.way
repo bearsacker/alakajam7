@@ -49,11 +49,7 @@ function Marker:new(message, x, y) {
     return marker
 }
 
-function Marker:update(@marker) {
-    marker.frame++
-}
-
-function Marker:draw(marker) {
+function Marker:draw(@marker) {
     if marker.message == MARKER_TYPE_LOSE {
         Graphics:drawSprite(MARKER_LOSE_SPRITE[marker.frame / 2], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
     } else if marker.message == MARKER_TYPE_GAIN {
@@ -63,6 +59,8 @@ function Marker:draw(marker) {
     } else if marker.message == MARKER_TYPE_OUCH {
         Graphics:drawSprite(MARKER_OUCH_SPRITE[marker.frame / 2], ZOOM * marker.x, ZOOM * marker.y, 0, ZOOM)
     }
+
+    marker.frame++
 }
 
 function Marker:isDead(marker) {

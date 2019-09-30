@@ -1,0 +1,31 @@
+type Vector [x, y]
+
+function Vector:new() {
+    Vector vector = null
+    vector.x = 0
+    vector.y = 0
+
+    return vector
+}
+
+function Vector:new(x, y) {
+    Vector vector = null
+    vector.x = x
+    vector.y = y
+
+    return vector
+}
+
+function Vector:distance(a, b) {
+    return Maths:sqrt((b.y - a.y) * (b.y - a.y) + (b.x - a.x) * (b.x - a.x))
+}
+
+function Vector:atan2(a, b) {
+    float angle = Maths:atan((b.y - a.y) / (b.x - a.x))
+    
+    if b.x - a.x < 0 {
+        angle += PI
+    }
+
+    return angle
+}

@@ -25,14 +25,12 @@ function Cloud:new() {
     return cloud
 }
 
-function Cloud:update(@cloud) {
+function Cloud:draw(@cloud) {
+    Graphics:drawSprite(cloud.sprite, ZOOM * cloud.x, ZOOM * cloud.y, 0, ZOOM / 2 * cloud.size)
+
     cloud.x += cloud.speed / 2.0
 
     if cloud.x >= WIDTH {
         cloud.x = 0.0 - cloud.size / 2 * CLOUD_WIDTH
     }
-}
-
-function Cloud:draw(cloud) {
-    Graphics:drawSprite(cloud.sprite, ZOOM * cloud.x, ZOOM * cloud.y, 0, ZOOM / 2 * cloud.size)
 }

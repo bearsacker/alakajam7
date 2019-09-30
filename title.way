@@ -34,7 +34,6 @@ while i < MAX_CLOUDS {
         Graphics:clear()
 
         Sea:draw()
-        Sea:update()
 
         if SEA.frame == 0 {
             titleCurrentFrame = (titleCurrentFrame + 1) % 4
@@ -48,8 +47,6 @@ while i < MAX_CLOUDS {
         int i = 0
         while i < clouds.size {
             Cloud:draw(clouds.elements[i])
-            Cloud:update(clouds.elements[i])
-
             i++
         }
 
@@ -71,13 +68,10 @@ while i < MAX_CLOUDS {
         Graphics:clear()
 
         Sea:draw()
-        Sea:update()
 
         int i = 0
         while i < clouds.size {
             Cloud:draw(clouds.elements[i])
-            Cloud:update(clouds.elements[i])
-
             i++
         }
 
