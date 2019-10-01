@@ -1,6 +1,5 @@
 rmdir /s /q build
 
-pause
 md build
 
 copy "way.jar" "build\way.jar"
