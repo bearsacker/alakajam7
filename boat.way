@@ -1,7 +1,5 @@
 type Boat [position, frame]
 
-global const int MAX_BOATS = 8
-
 global const int BOAT_WIDTH = 16
 global const int BOAT_HEIGHT = 16
 global const int BOAT_SPEED = 2
@@ -20,6 +18,7 @@ boatSprite[2] = Graphics:loadSprite("sprites/boat.png", BOAT_WIDTH * 2, 0, BOAT_
 boatSprite[3] = Graphics:loadSprite("sprites/boat.png", BOAT_WIDTH * 3, 0, BOAT_WIDTH * 4, BOAT_HEIGHT)
 boatSprite[4] = Graphics:loadSprite("sprites/boat.png", BOAT_WIDTH * 4, 0, BOAT_WIDTH * 5, BOAT_HEIGHT)
 boatSprite[5] = Graphics:loadSprite("sprites/boat.png", BOAT_WIDTH * 5, 0, BOAT_WIDTH * 6, BOAT_HEIGHT)
+
 
 function Boat:new() {
     Boat boat = null

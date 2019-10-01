@@ -3,8 +3,6 @@ include title
 
 global const int MAX_LIFES = 5
 
-global int score = 0
-global int lifes = MAX_LIFES
 
 global List markers = List:new()
 global Kraken kraken = Kraken:new()
@@ -23,11 +21,16 @@ List:add(rocks, Rock:new(ROCK_SPRITE_3, 9, 7, 2))
 global int lastDisplay = time
 global bool direction = false
 
+global int score = 0
+global int lifes = MAX_LIFES
+global int level = 0
+
 function resetGame() {
     List:clear(markers)
     List:clear(boats)
     kraken = Kraken:new()
     score = 0
+    level = 0
     lifes = MAX_LIFES
 }
 
@@ -87,6 +90,10 @@ function drawScene() {
 
     if mouse.x > 0 && mouse.y > 0 {
         if direction {
+            Graphics:setColor(LIGHT_OFF)
+            int radius = ZOOM * BOAT_WIDTH * 1.5
+            Graphics:drawOval(mouse.x - radius, mouse.y - radius, radius * 2, radius * 2, 2)
+
             Graphics:setColor(LIGHT_ON)
         } else {
             Graphics:setColor(LIGHT_OFF)
@@ -111,6 +118,7 @@ function drawScene() {
     }
 
     Graphics:drawText("LIFES " + lifes, ZOOM * 2, ZOOM * 2, ATASCII, ZOOM / 2)
+    Graphics:drawText("LEVEL " + level, ZOOM * (WIDTH / 2 - ("LEVEL " + level).length * 4 - 2), ZOOM * 2, ATASCII, ZOOM / 2)
     Graphics:drawText("SCORE " + score, ZOOM * (WIDTH - ("SCORE " + score).length * 8 - 2), ZOOM * 2, ATASCII, ZOOM / 2)
 
     Graphics:flush()
@@ -126,13 +134,13 @@ while true {
         Input:flush()
         direction = Input:isButtonPressed(1)
 
-        if boats.size < MAX_BOATS && Random:rand(20) == 1 && waitBeforeBoat <= 0 {
+        if boats.size < level + 2 && Random:rand(20) == 1 && waitBeforeBoat <= 0 {
             List:add(boats, Boat:new())
-            waitBeforeBoat = 10
+            waitBeforeBoat = 20
         }
         waitBeforeBoat -= 1
 
-        if kraken.state == KRAKEN_STATE_IMMERSED && waitBeforeKraken <= 0 && score >= 5 && (score == 5 || Random:rand(50) == 1) {
+        if kraken.state == KRAKEN_STATE_IMMERSED && waitBeforeKraken <= 0 && level >= 1 && (level == 1 || Random:rand(50) == 1) {
             Kraken:incoming(kraken)
             waitBeforeKraken = 60
         }
@@ -140,6 +148,8 @@ while true {
         if kraken.state == KRAKEN_STATE_IMMERSED {
             waitBeforeKraken--
         }
+
+        level = score / 4
 
         if lifes == 0 {
             include gameover
