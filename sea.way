@@ -12,7 +12,7 @@ global Sea SEA = null
 SEA.frame = 0
 
 function Sea:draw() {
-    Graphics:drawSprite(SEA_SPRITE[SEA.frame], 0, 0, 0, ZOOM)
+    Graphics:drawSprite(SEA_SPRITE[SEA.frame / 2], 0, 0, 0, ZOOM)
     Graphics:drawSprite(SKY_SPRITE, 0, 0, 0, ZOOM)
-    SEA.frame = (SEA.frame + 1) % SEA_SPRITE.length
+    SEA.frame = (SEA.frame + 1) % (SEA_SPRITE.length * 2)
 }

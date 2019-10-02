@@ -124,7 +124,7 @@ function drawScene() {
     Graphics:flush()
 }
 
-int waitBeforeBoat = 0
+int waitBeforeBoat = 20
 int waitBeforeKraken = 0
 
 while true {
@@ -134,11 +134,14 @@ while true {
         Input:flush()
         direction = Input:isButtonPressed(1)
 
-        if boats.size < level + 2 && Random:rand(20) == 1 && waitBeforeBoat <= 0 {
-            List:add(boats, Boat:new())
-            waitBeforeBoat = 20
+        if boats.size < (1 + level) * 2  {
+            if waitBeforeBoat <= 0 {
+                List:add(boats, Boat:new())
+                waitBeforeBoat = Random:rand(10, 25)
+            } else {
+                waitBeforeBoat--
+            }
         }
-        waitBeforeBoat -= 1
 
         if kraken.state == KRAKEN_STATE_IMMERSED && waitBeforeKraken <= 0 && level >= 1 && (level == 1 || Random:rand(50) == 1) {
             Kraken:incoming(kraken)

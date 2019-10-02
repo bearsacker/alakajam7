@@ -33,6 +33,6 @@ function Rock:new(sprite, x, y, frame) {
 }
 
 function Rock:draw(@rock) {
-    Graphics:drawSprite(rock.sprite[rock.frame], ZOOM * rock.x * 16, ZOOM * rock.y * 16, 0, ZOOM)
-    rock.frame = (rock.frame + 1) % ROCK_SPRITE_1.length
+    Graphics:drawSprite(rock.sprite[rock.frame / 2], ZOOM * rock.x * 16, ZOOM * rock.y * 16, 0, ZOOM)
+    rock.frame = (rock.frame + 1) % (ROCK_SPRITE_1.length * 2)
 }
