@@ -27,7 +27,7 @@ while i < MAX_CLOUDS {
     int titleCurrentFrame = 0
 
     string text = "PRESS SPACE"
-    string author = "Bearsucker - 2019"
+    string author = "Bearsacker - 2019"
 
     while !Input:isKeyPressed(KEY_SPACE) {
         Input:flush()
